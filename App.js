@@ -1,5 +1,5 @@
 import React from 'react';
-import type {Node, useState} from 'react';
+import type {Node} from 'react';
 import {
   TouchableHighlight,
   StatusBar,
@@ -12,7 +12,6 @@ import {BleManager, Device} from 'react-native-ble-plx';
 import {Buffer} from 'buffer';
 // import { fileInitGPX } from './gpxHandler';
 import * as RNFS from 'react-native-fs';
-import {write} from 'fs';
 
 const App: () => Node = () => {
   const RIDER_DEVICE_NAME = 'STATCYCLE';
@@ -130,8 +129,6 @@ const App: () => Node = () => {
         console.log(err.message);
       });
   };
-
-  function fileInitGPX() {}
 
   return (
     <View style={styles.container}>
