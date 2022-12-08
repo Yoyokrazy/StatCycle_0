@@ -12,6 +12,7 @@ import {BleManager, Device} from 'react-native-ble-plx';
 import {Buffer} from 'buffer';
 // import { fileInitGPX } from './gpxHandler';
 import * as RNFS from 'react-native-fs';
+import {stravaInit} from './stravaHandler';
 
 const App: () => Node = () => {
   const RIDER_DEVICE_NAME = 'STATCYCLE';
@@ -151,8 +152,8 @@ const App: () => Node = () => {
         <TouchableHighlight style={styles.button} onPress={writeFile}>
           <Text style={styles.buttonText}>XML Tester</Text>
         </TouchableHighlight>
-        <TouchableHighlight style={styles.button} onPress={debugTester}>
-          <Text style={styles.buttonText}>Debug Tester</Text>
+        <TouchableHighlight style={styles.button} onPress={stravaInit}>
+          <Text style={styles.buttonText}>Strava Init</Text>
         </TouchableHighlight>
       </View>
 
