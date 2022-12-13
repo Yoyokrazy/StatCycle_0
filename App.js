@@ -9,10 +9,9 @@ import {
   View,
   Alert,
   Image,
-  useState,
 } from 'react-native';
 import {BleManager, Device} from 'react-native-ble-plx';
-import {Dialog} from 'react-native-dialog';
+import Dialog from 'react-native-dialog';
 import {Buffer} from 'buffer';
 import * as RNFS from 'react-native-fs';
 // import {stravaAuth} from './stravaHandler';
@@ -20,7 +19,7 @@ import {authorize} from 'react-native-app-auth';
 import DocumentPicker from 'react-native-document-picker';
 
 const App: () => Node = () => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = React.useState(false);
 
   const RIDER_DEVICE_NAME = 'STATCYCLE';
   const CLOSE_DIR_UUID = 'c3b5d7db-997b-4207-87fb-84ac539d9fc2';
@@ -34,7 +33,7 @@ const App: () => Node = () => {
   const currMonth = dateObj.getMonth() + 1;
   const currYear = dateObj.getFullYear();
   // const GPXfilename = `StatCycle_GPX_${currYear}_${currMonth}_${currDay}.gpx`;
-  const GPXfilename = `StatCycle_GPX_${currYear}_${currMonth}_${currDay}_BRANDON.gpx`;
+  const GPXfilename = `StatCycle_GPX_${currYear}_${currMonth}_${currDay}.gpx`;
   const XML_HEADER =
     '<?xml version="1.0" encoding="UTF-8"?><gpx creator="StatCycle Companion GPX Generator"><trk><name>StatCycle Ride</name><type>1</type><trkseg>';
 
@@ -132,22 +131,25 @@ const App: () => Node = () => {
     Alert.alert('File Selected:', filenameUtf);
   }
 
+  async function fileNameDialog() {
+    setVisible(true);
+  }
+
+  let userFilename;
   async function bleFileExport() {
+    setVisible(false);
+    console.log('USER FILENAME:', userFilename);
     if (!pairingStatus) {
       Alert.alert('Please connect to your StatCycle first!');
       return;
     }
-
-    Alert.alert('File export beginning...');
-    waitforme(5000);
 
     await gpsService.writeCharacteristicWithoutResponse(
       OPEN_FILE_UUID,
       truncatedB64,
     );
 
-    //TODO: xml formatted header
-    const localFilepath = RNFS.DocumentDirectoryPath + `/${GPXfilename}`;
+    const localFilepath = RNFS.DocumentDirectoryPath + `/${userFilename}`;
     await RNFS.writeFile(localFilepath, XML_HEADER);
 
     // for (let i = 0; i < 500; i++) {
@@ -255,6 +257,18 @@ const App: () => Node = () => {
     return;
   }
 
+  function handleCancel() {
+    setVisible(false);
+  }
+
+  // function handleSave() {
+  //   setVisible(false);
+  // }
+
+  // function handleFilename(input) {
+  //   userFilename = input;
+  // }
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -274,12 +288,17 @@ const App: () => Node = () => {
 
       <View style={styles.buttonContainer}>
         <Dialog.Container visible={visible}>
-          <Dialog.Title>Account delete</Dialog.Title>
-          <Dialog.Description>
-            Do you want to delete this account? You cannot undo this action.
-          </Dialog.Description>
+          <Dialog.Title>
+            Please enter your desired GPX file name below. (must end in '.gpx')
+          </Dialog.Title>
+          <Dialog.Input
+            onChangeText={filename => {
+              userFilename = filename;
+            }}>
+            {GPXfilename}
+          </Dialog.Input>
           <Dialog.Button label="Cancel" onPress={handleCancel} />
-          <Dialog.Button label="Delete" onPress={handleDelete} />
+          <Dialog.Button label="Save" onPress={bleFileExport} />
         </Dialog.Container>
         <TouchableHighlight style={styles.button} onPress={pairStatCycle}>
           <Text style={styles.buttonText}>Scan and Connect to StatCycle</Text>
@@ -289,7 +308,7 @@ const App: () => Node = () => {
           <Text style={styles.buttonText}>Select GPX File</Text>
         </TouchableHighlight>
 
-        <TouchableHighlight style={styles.button} onPress={bleFileExport}>
+        <TouchableHighlight style={styles.button} onPress={fileNameDialog}>
           <Text style={styles.buttonText}>Export GPX File</Text>
         </TouchableHighlight>
 
