@@ -1,0 +1,37 @@
+characteristics:
+
+***-- read file (keep calling for lines) -- r
+ LOG  characteristic UUID: 4f204e4b-2ec6-427e-85b5-22430fc9626b
+
+-- data size (file size of file opened) -- r
+ LOG  characteristic UUID: 75941c93-9edf-4816-94ee-6372acac6586
+
+-- number of bytes read from current file (pointer loc) -- r
+ LOG  characteristic UUID: 0b7e2bea-4808-4a2d-8d9a-7511cc70812d
+
+-- seek to position in file (likely not needed) - wr w/o rsp
+ LOG  characteristic UUID: 18b7015c-57dc-4331-8d9a-1f9ac6598bc5
+
+***-- open file - write without response
+ LOG  characteristic UUID: 7d8d6c8b-dff7-4e4c-a67b-bcac8a945d5b 
+
+-- file status (check if it opened properly) - r
+ LOG  characteristic UUID: c28342fe-aa1c-4f48-9ac0-6e53b358a415
+
+-- close file - r
+ LOG  characteristic UUID: 8750a6e4-891d-40d9-bdcd-ea53d9fa168c
+
+***-- list dir (gives files in directory) - r
+ LOG  characteristic UUID: 6094f1ba-8cf0-44bc-9b67-4ba8b30c42f3
+
+***-- opens dir - r
+ LOG  characteristic UUID: 638637bd-5780-4140-8593-ad68ed54eec1
+
+-- close dir - r
+ LOG  characteristic UUID: c3b5d7db-997b-4207-87fb-84ac539d9fc2
+
+Workflow:
+1- open dir
+2- list dir (1 for each file)
+3- open file
+4- read file (repeat 4)
